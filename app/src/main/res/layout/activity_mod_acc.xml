@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffff">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_modify"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true">
+
+            <ImageView android:id="@+id/backButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/back_arrow"
+                android:layout_gravity="start"
+                android:layout_marginStart="20dp"
+                android:contentDescription="Back" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+
+            android:id="@+id/modifyPhotoProfileText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Modify Account"
+            android:textSize="28sp"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textColor="@color/lavander"
+            android:layout_marginStart="20dp"
+            android:layout_below="@id/toolbar_modify"
+            android:layout_marginTop="10dp"/>
+
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_below="@id/modifyPhotoProfileText"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/default_profile_image"
+            android:contentDescription="Profile Image" />
+
+        <Button
+
+            android:id="@+id/chooseImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/profileImage"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="15dp"
+            android:layout_toEndOf="@id/profileImage"
+            android:text="Choose image"
+            android:backgroundTint="@color/lavander"
+            app:cornerRadius = "10dp"/>
+
+        <TextView
+            android:id="@+id/currentUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Modify Username"
+            android:textSize="18sp"
+            android:layout_marginStart="20dp"
+            android:layout_below="@id/profileImage"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+                   android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_login"
+            android:padding="8dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:drawablePadding="8dp"
+            android:id="@+id/newUsernameEditText"
+            android:layout_below="@id/currentUsername"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+
+            android:hint="New Username"/>
+
+
+        <TextView
+            android:id="@+id/currentEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Modify Email"
+            android:textSize="18sp"
+            android:layout_marginStart="20dp"
+            android:layout_below="@id/newUsernameEditText"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/back_login"
+            android:padding="8dp"
+            android:layout_marginTop="16dp"
+
+            android:textColor="@color/black"
+            android:drawablePadding="8dp"
+
+            android:id="@+id/newEmailEditText"
+
+            android:layout_below="@id/currentEmail"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="New Email"/>
+
+        <!-- Aggiungi la sezione per modificare la password -->
+        <TextView
+            android:id="@+id/currentPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Modify Password"
+            android:textSize="18sp"
+            android:layout_marginStart="20dp"
+            android:layout_below="@id/newEmailEditText"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Aggiungi il bottone per confermare le modifiche -->
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/back_login"
+            android:padding="8dp"
+            android:layout_marginTop="16dp"
+
+            android:textColor="@color/black"
+            android:drawablePadding="8dp"
+
+            android:id="@+id/newPasswordEditText"
+
+            android:layout_below="@id/currentPassword"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="New Password"
+            android:inputType="textPassword" />
+        <EditText
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_login"            android:padding="8dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:drawablePadding="8dp"
+            android:id="@+id/repeatPasswordEditText"
+            android:layout_below="@id/newPasswordEditText"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="Repeat Password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/confirmChangesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/repeatPasswordEditText"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="Confirm Changes"
+            android:backgroundTint="@color/lavander"
+            app:cornerRadius = "10dp"/>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

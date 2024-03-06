@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Immagine dell'amico -->
+        <ImageView
+            android:id="@+id/friendImageView"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/default_profile_image"
+            android:layout_centerVertical="true" />
+
+        <!-- Nome dell'amico -->
+        <TextView
+            android:id="@+id/friendNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/friendImageView"
+            android:layout_marginStart="16dp"
+            android:text="Friend Name"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
