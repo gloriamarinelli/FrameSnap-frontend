@@ -49,6 +49,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Login"
+                android:textSize="22sp"
+
                 android:backgroundTint="@color/lavander"
                 android:layout_marginTop="20dp"
                 app:cornerRadius = "10dp"
@@ -61,10 +63,10 @@
                 android:id="@+id/btnCreateAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Create Account"
-                android:backgroundTint="@color/lavander"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:text="New to FrameSnap? Create an account"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"
                 app:cornerRadius = "10dp"/>
 
             />

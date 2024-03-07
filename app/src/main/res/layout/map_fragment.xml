@@ -5,24 +5,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
+                <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I'm in the map zone"
-            android:textSize="18sp"
-            android:textColor="@android:color/black" />
+            android:text="Shops"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+                    android:layout_marginBottom="16dp"
+                    android:textColor="@color/lavander"/>
 
-        <!-- Aggiungi altri elementi al LinearLayout se necessario -->
-
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
 </RelativeLayout>

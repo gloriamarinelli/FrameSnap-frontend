@@ -13,12 +13,25 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add a friend"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="@color/lavander"/>
+
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:background="@drawable/back_login"
+                android:layout_marginBottom="16dp"
+
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/friendRecyclerView"

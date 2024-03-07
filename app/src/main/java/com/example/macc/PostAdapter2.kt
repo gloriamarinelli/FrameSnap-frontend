@@ -1,4 +1,4 @@
-package com.example.styleup
+package com.example.macc
 
 import android.content.Context
 import android.util.Log
@@ -9,7 +9,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
+import com.example.macc.LikePostAPI
+import com.example.macc.LikePostRequest
+import com.example.macc.LikePostResponse
+import com.example.macc.Post
 import com.example.macc.R
+import com.example.macc.UnlikePostAPI
+import com.example.macc.UnlikePostRequest
+import com.example.macc.UnlikePostResponse
 import com.example.macc.retrofit
 import retrofit2.Call
 import retrofit2.Callback

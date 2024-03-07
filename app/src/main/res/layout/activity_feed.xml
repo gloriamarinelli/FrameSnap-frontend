@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffff"
+    android:background="@color/white"
     >
 
     <androidx.appcompat.widget.Toolbar
@@ -10,14 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
 
-        <TextView
-            android:id="@+id/appTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FrameSnap"
-            android:textColor="@color/lavander"
-            android:textSize="20sp"
-            android:layout_gravity="center" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/logo" />
 
         <ImageView
             android:id="@+id/notificationIcon"
@@ -46,6 +45,16 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:weightSum="4">
+
+        <ImageView
+            android:id="@+id/icon2"
+            android:layout_width="0dp"
+            android:layout_height="24dp"
+            android:layout_toEndOf="@+id/icon1"
+            android:layout_weight="1"
+            android:contentDescription="Icon 2"
+            android:src="@drawable/ic_home" />
+
         <ImageView
             android:id="@+id/icon1"
             android:layout_width="0dp"
@@ -54,14 +63,7 @@
             android:src="@drawable/ic_friends"
             android:contentDescription="Icon 1" />
 
-        <ImageView
-            android:id="@+id/icon2"
-            android:layout_width="0dp"
-            android:layout_height="24dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_home"
-            android:layout_toEndOf="@+id/icon1"
-            android:contentDescription="Icon 2" />
+
 
         <ImageView
             android:id="@+id/icon3"

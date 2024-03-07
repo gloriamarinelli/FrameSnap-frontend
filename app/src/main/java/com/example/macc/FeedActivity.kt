@@ -1,4 +1,4 @@
-package com.example.styleup
+package com.example.macc
 
 import android.app.AlertDialog
 import android.content.Context
@@ -18,8 +18,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.example.macc.R
-import com.example.macc.retrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -153,12 +151,23 @@ class FeedActivity: AppCompatActivity() {
         icon4 = findViewById(R.id.icon4)
 
 
+        icon1.setOnClickListener {
+            val friendsFragment = FriendsFragment()
+            setMainFragment(friendsFragment)
+        }
 
-
+        icon2.setOnClickListener {
+            setMainFragment(PaintsFragment())
+        }
 
         icon3.setOnClickListener {
             val profileFragment = ProfileFragment()
             setMainFragment(profileFragment)
+        }
+
+        icon4.setOnClickListener {
+            val mapFragment = MapFragment()
+            setMainFragment(mapFragment)
         }
 
 

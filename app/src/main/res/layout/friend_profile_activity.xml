@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffff">
 
 
     <!-- Rimani con la struttura dei dettagli del profilo -->
@@ -44,6 +46,15 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="@color/lavander"/>
+
             <!-- Aggiungi il testo con il nome account centrato -->
             <ImageView
                 android:id="@+id/profileImage"
@@ -62,23 +73,26 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="20dp"
+                />
 
-            <!-- Aggiungi il bottone "Friends" centrato -->
+                      <!-- Aggiungi il bottone "Friends" centrato -->
             <Button
                 android:id="@+id/friendsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="trial"
                 android:layout_gravity="center"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/lavander"
+                app:cornerRadius = "10dp"/>
 
             <TextView
                 android:id="@+id/noPostsMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="The user has not posted any photos yet"
+                android:text="The user has no post"
                 android:textSize="18sp"
                 android:textColor="#808080"
                 android:layout_marginTop="5dp"

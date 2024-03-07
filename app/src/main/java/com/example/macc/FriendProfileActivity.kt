@@ -1,5 +1,6 @@
-package com.example.styleup
+package com.example.macc
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -15,7 +16,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -63,6 +63,7 @@ class FriendProfileActivity : AppCompatActivity() {
 
     private lateinit var friendsButton: Button
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.friend_profile_activity)
@@ -92,12 +93,12 @@ class FriendProfileActivity : AppCompatActivity() {
             val loggedUser = sharedPreferences.getString("username", "")
 
             areFriends(loggedUser, user.username) {
-                if (friendsButton.text == "Add friend") {
+                if (friendsButton.text == "Add to Friends") {
                     noPostsMessage.visibility = View.VISIBLE
-                    noPostsMessage.text = "Send a friendship request to see the posts!"
+                    noPostsMessage.text = "Send a request to see the posts"
                 }
                 else {
-                    if (friendsButton.text == "Pending request") {
+                    if (friendsButton.text == "Request Sent") {
                         noPostsMessage.visibility = View.VISIBLE
                         noPostsMessage.text = "Waiting for the user to accept the request..."
                     }
@@ -125,6 +126,7 @@ class FriendProfileActivity : AppCompatActivity() {
 
                     val sendFriendshipRequestApiService = retrofit.create(SendFriendshipRequestAPI::class.java)
                     sendFriendshipRequestApiService.sendFriendshipRequest(request).enqueue(object : Callback<SendFriendshipRequestResponse> {
+                        @SuppressLint("SetTextI18n")
                         override fun onResponse(call: Call<SendFriendshipRequestResponse>, response: Response<SendFriendshipRequestResponse>) {
                             try {
                                 // Access the result using response.body()
@@ -134,10 +136,10 @@ class FriendProfileActivity : AppCompatActivity() {
                                 result?.let {
                                     val status = it.status
                                     if (status == 200) {
-                                        friendsButton.text = "Pending request"
+                                        friendsButton.text = "Request Sent"
                                         noPostsMessage.text = "Waiting for the user to accept the request..."
                                     }
-                                    else {
+                                   else {
                                         Log.e("FriendProfileActivity", "status: ${status}")
                                     }
                                 }
@@ -255,6 +257,7 @@ class FriendProfileActivity : AppCompatActivity() {
 
         val areFriendsApiService = retrofit.create(AreFriendsAPI::class.java)
         areFriendsApiService.areFriends(request).enqueue(object : Callback<AreFriendsResponse> {
+            @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call<AreFriendsResponse>, response: Response<AreFriendsResponse>) {
                 try {
                     // Access the result using response.body()
@@ -266,11 +269,11 @@ class FriendProfileActivity : AppCompatActivity() {
                         if (status == 200) {
                             Log.d("FriendProfileActivity", "it.result = ${it.result}")
                             if(it.result == 0) {
-                                friendsButton.text = "Is your friend"
+                                friendsButton.text = "✔ Friend "
                             }
                             else {
                                 if(it.result == 1) {
-                                    friendsButton.text = "Pending request"
+                                    friendsButton.text = "Request Sent"
                                 }
                                 else {
                                     friendsButton.text = "Add friend"

@@ -1,4 +1,4 @@
-package com.example.styleup
+package com.example.macc
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -21,8 +21,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.example.macc.R
-import com.example.macc.backendURL
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

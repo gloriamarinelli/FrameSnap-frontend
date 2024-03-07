@@ -1,34 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+
+    >
+
     <item
         android:id="@+id/notification_item"
         android:title="Notification 1"
-        app:showAsAction="never" />
+        app:showAsAction="never"
 
+        />
 </menu>
 
-<!--
-Nel Kotlin inserire per notifiche del follow:
-override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    menuInflater.inflate(R.menu.menu_notifications_complex, menu)
-    val notificationItem = menu.findItem(R.id.notification_item_complex)
-
-    // Associa l'ActionProvider personalizzato all'elemento del menu delle notifiche
-    val actionProvider = MenuItemCompat.getActionProvider(notificationItem) as ShareActionProvider
-
-    // Infla il layout personalizzato nel provider di azioni
-    val view = LayoutInflater.from(this).inflate(R.layout.menu_notification_complex, null)
-    // Personalizza il layout come desiderato, ad esempio impostando testo e cliccabilità dei bottoni
-
-    // Imposta il layout personalizzato nel provider di azioni
-    actionProvider.setContentView(view)
-
-    return true
-}
-
-
-
-
-
--->

@@ -27,6 +27,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Profile"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/lavander"/>
+
                     <ImageView
                         android:id="@+id/settingsIcon"
                         android:layout_width="25dp"
@@ -42,7 +52,9 @@
                     android:layout_height="200dp"
                     android:layout_gravity="center"
                     android:src="@drawable/default_profile_image"
-                    android:contentDescription="Profile Image"/>
+                    android:contentDescription="Profile Image"
+
+                    />
 
                 <!-- Aggiungi il testo con il nome account centrato -->
                 <TextView
@@ -53,7 +65,9 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_gravity="center"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="20dp"
+                   />
+
 
                 <!-- Aggiungi il bottone "Friends" centrato -->
                 <Button
@@ -93,5 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        app:menu="@menu/popup_menu" />
+        app:menu="@menu/popup_menu"
+        app:background="@color/white"
+        />
 </androidx.drawerlayout.widget.DrawerLayout>

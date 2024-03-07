@@ -1,4 +1,4 @@
-package com.example.styleup
+package com.example.macc
 
 import android.app.AlertDialog
 import android.content.Context
@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
+import com.example.macc.FeedActivity
 import com.example.macc.R
 import com.example.macc.retrofit
 import retrofit2.Call

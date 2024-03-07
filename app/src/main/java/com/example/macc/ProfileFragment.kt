@@ -1,4 +1,4 @@
-package com.example.styleup
+package com.example.macc
 
 import android.app.AlertDialog
 import android.content.Context
@@ -21,9 +21,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.macc.MainActivity
-import com.example.macc.R
-import com.example.macc.retrofit
 import com.google.android.material.navigation.NavigationView
 import retrofit2.Call
 import retrofit2.Callback
@@ -79,6 +76,7 @@ class ProfileFragment: Fragment(), FriendItemClickListener {
 
     private lateinit var profileImage: ImageView
     private lateinit var usernameText: TextView
+    private lateinit var emailText: TextView
 
     private lateinit var settingsIcon: ImageView
     private lateinit var drawerLayout: DrawerLayout
@@ -144,6 +142,7 @@ class ProfileFragment: Fragment(), FriendItemClickListener {
         // Inizializza le variabili dell'immagine del profilo e dello username
         profileImage = view.findViewById(R.id.profileImage)
         usernameText = view.findViewById(R.id.usernameText)
+
 
         profileImage.setImageResource(R.drawable.default_profile_image)
         usernameText.text = username
