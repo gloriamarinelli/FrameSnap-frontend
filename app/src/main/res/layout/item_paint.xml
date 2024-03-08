@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    android:backgroundTint="@color/white"
+app:cardBackgroundColor="@color/white"
+    >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="8dp"
+        android:backgroundTint="@color/white"
+
+        >
+
+        <ImageView
+            android:id="@+id/paintImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/paint_n1"
+            android:contentDescription="Paint Image"/>
+
+        <TextView
+            android:id="@+id/paintName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paint Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"/>
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="end"
+            android:src="@drawable/camera_icon"
+            android:contentDescription="Paint Icon"
+            app:tint="#808080" />
+
+
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

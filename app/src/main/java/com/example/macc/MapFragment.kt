@@ -15,10 +15,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
-import kotlin.math.cos
 
 class MapFragment : Fragment(), OnMapReadyCallback {
     private val FINE_PERMISSION_CODE = 1
@@ -32,8 +32,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     ): View? {
         val view = inflater.inflate(R.layout.map_fragment, container, false)
 
-        fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireActivity())
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         getLastLocation()
 
         return view
@@ -49,13 +48,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val rome = LatLng(41.9028, 12.4964) // Updated coordinates for Rome
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rome, 10f)) // Zoom in to Rome
 
-        val numberOfPoints = 10
-        val distanceBetweenPoints = 0.05 // in degrees
+        val numberOfPoints = 7
+        val distanceBetweenPoints = 6.0 // in kilometers
 
         for (i in 1..numberOfPoints) {
-            val latOffset = (Math.random() - 0.5) * 2 * distanceBetweenPoints
+            val angle = (i.toDouble() / numberOfPoints) * 2 * Math.PI
+            val latOffset = distanceBetweenPoints / 111.32 * Math.sin(angle)
             val lngOffset =
-                (Math.random() - 0.5) * 2 * distanceBetweenPoints / cos(rome.latitude)
+                distanceBetweenPoints / (111.32 * Math.cos(rome.latitude)) * Math.cos(angle)
 
             val casualPoint = LatLng(rome.latitude + latOffset, rome.longitude + lngOffset)
             myMap.addMarker(MarkerOptions().position(casualPoint).title("Casual Point $i"))
@@ -82,8 +82,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val task: Task<Location> = fusedLocationProviderClient.lastLocation
         task.addOnSuccessListener { location ->
             if (location != null) {
-                // Comment out or remove the following lines to exclude adding the user's location marker
-                /*
+                // Add a blue marker for the user's location
                 val userLatLng = LatLng(location.latitude, location.longitude)
                 myMap.addMarker(
                     MarkerOptions()
@@ -91,7 +90,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         .title("Your Location")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                 )
-                */
 
                 val mapFragment =
                     childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment

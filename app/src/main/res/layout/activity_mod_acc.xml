@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,7 +8,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_modify"
@@ -15,164 +18,173 @@
             android:layout_height="?attr/actionBarSize"
             android:layout_alignParentTop="true">
 
-            <ImageView android:id="@+id/backButton"
+            <ImageView
+                android:id="@+id/backButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:src="@drawable/back_arrow"
                 android:layout_gravity="start"
                 android:layout_marginStart="20dp"
-                android:contentDescription="Back" />
+                android:contentDescription="Back"
+                android:src="@drawable/back_arrow" />
 
         </androidx.appcompat.widget.Toolbar>
 
         <TextView
-
             android:id="@+id/modifyPhotoProfileText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Modify Account"
-            android:textSize="28sp"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            android:textColor="@color/lavander"
-            android:layout_marginStart="20dp"
             android:layout_below="@id/toolbar_modify"
-            android:layout_marginTop="10dp"/>
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="133dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="134dp"
+            android:text="Modify Account"
+            android:textAlignment="center"
+            android:textColor="@color/lavander"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/profileImage"
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:layout_below="@id/modifyPhotoProfileText"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="20dp"
-            android:src="@drawable/default_profile_image"
-            android:contentDescription="Profile Image" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="141dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="139dp"
+            android:contentDescription="Profile Image"
+            android:src="@drawable/default_profile_image" />
 
         <Button
-
             android:id="@+id/chooseImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="47dp"
+            android:layout_height="31dp"
             android:layout_alignBottom="@id/profileImage"
-            android:layout_marginStart="3dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="50dp"
-            android:layout_marginBottom="15dp"
-            android:layout_toEndOf="@id/profileImage"
-            android:text="Choose image"
-            android:backgroundTint="@color/lavander"
-            app:cornerRadius = "10dp"/>
+            android:layout_marginEnd="139dp"
+            android:layout_marginBottom="6dp"
+            android:backgroundTint="#28000000"
+            app:icon="@drawable/ic_pen"
+            app:iconPadding="0dp"
+            app:iconTint="@color/lavander"
+            app:rippleColor="@color/white" />
 
         <TextView
             android:id="@+id/currentUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Modify Username"
-            android:textSize="18sp"
-            android:layout_marginStart="20dp"
             android:layout_below="@id/profileImage"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:text="Modify Username"
+            android:textSize="18sp" />
 
         <EditText
-                   android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/back_login"
-            android:padding="8dp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/black"
-            android:drawablePadding="8dp"
             android:id="@+id/newUsernameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/currentUsername"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
+            android:background="@drawable/back_login"
+            android:drawablePadding="8dp"
+            android:hint="New Username"
+            android:padding="8dp"
 
-            android:hint="New Username"/>
+            android:textColor="@color/black" />
 
 
         <TextView
             android:id="@+id/currentEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Modify Email"
-            android:textSize="18sp"
-            android:layout_marginStart="20dp"
             android:layout_below="@id/newUsernameEditText"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:text="Modify Email"
+            android:textSize="18sp" />
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:background="@drawable/back_login"
-            android:padding="8dp"
-            android:layout_marginTop="16dp"
-
-            android:textColor="@color/black"
-            android:drawablePadding="8dp"
-
             android:id="@+id/newEmailEditText"
+            android:layout_width="match_parent"
 
+            android:layout_height="wrap_content"
             android:layout_below="@id/currentEmail"
             android:layout_marginStart="20dp"
+
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
-            android:hint="New Email"/>
+
+            android:background="@drawable/back_login"
+
+            android:drawablePadding="8dp"
+            android:hint="New Email"
+            android:padding="8dp"
+            android:textColor="@color/black" />
 
         <!-- Aggiungi la sezione per modificare la password -->
         <TextView
             android:id="@+id/currentPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Modify Password"
-            android:textSize="18sp"
-            android:layout_marginStart="20dp"
             android:layout_below="@id/newEmailEditText"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:text="Modify Password"
+            android:textSize="18sp" />
 
         <!-- Aggiungi il bottone per confermare le modifiche -->
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:background="@drawable/back_login"
-            android:padding="8dp"
-            android:layout_marginTop="16dp"
-
-            android:textColor="@color/black"
-            android:drawablePadding="8dp"
-
             android:id="@+id/newPasswordEditText"
+            android:layout_width="match_parent"
 
+            android:layout_height="wrap_content"
             android:layout_below="@id/currentPassword"
             android:layout_marginStart="20dp"
+
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
+
+            android:background="@drawable/back_login"
+
+            android:drawablePadding="8dp"
             android:hint="New Password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:textColor="@color/black" />
+
         <EditText
 
+            android:id="@+id/repeatPasswordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/back_login"            android:padding="8dp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/black"
-            android:drawablePadding="8dp"
-            android:id="@+id/repeatPasswordEditText"
             android:layout_below="@id/newPasswordEditText"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
+            android:background="@drawable/back_login"
+            android:drawablePadding="8dp"
             android:hint="Repeat Password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/confirmChangesButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/repeatPasswordEditText"
-            android:layout_marginTop="15dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="20dp"
-            android:text="Confirm Changes"
             android:backgroundTint="@color/lavander"
-            app:cornerRadius = "10dp"/>
+            android:text="Confirm Changes"
+            app:cornerRadius="10dp" />
 
     </RelativeLayout>
 

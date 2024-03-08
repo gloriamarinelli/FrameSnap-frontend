@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarTop"
@@ -28,15 +27,12 @@
             android:contentDescription="Notifications" />
     </androidx.appcompat.widget.Toolbar>
 
-
-
     <FrameLayout
         android:id="@+id/mainFragmentContainers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbarTop"
-        android:layout_above="@+id/bottomBar"/>
-
+        android:layout_above="@+id/bottomBar" />
 
     <LinearLayout
         android:id="@+id/bottomBar"
@@ -46,42 +42,90 @@
         android:orientation="horizontal"
         android:weightSum="4">
 
-        <ImageView
-            android:id="@+id/icon2"
+        <!-- Icon 2 -->
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="24dp"
-            android:layout_toEndOf="@+id/icon1"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:contentDescription="Icon 2"
-            android:src="@drawable/ic_home" />
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <ImageView
-            android:id="@+id/icon1"
+            <ImageView
+                android:id="@+id/icon2"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_home"
+                android:contentDescription="Icon 2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home" />
+        </LinearLayout>
+
+        <!-- Icon 1 -->
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="24dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_friends"
-            android:contentDescription="Icon 1" />
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/icon1"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_friends"
+                android:contentDescription="Icon 1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Friends" />
+        </LinearLayout>
 
 
 
-        <ImageView
-            android:id="@+id/icon3"
+        <!-- Icon 3 -->
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="24dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_user"
-            android:layout_toEndOf="@+id/icon2"
-            android:contentDescription="Icon 3" />
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <ImageView
-            android:id="@+id/icon4"
+            <ImageView
+                android:id="@+id/icon3"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_user"
+                android:contentDescription="Icon 3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile" />
+        </LinearLayout>
+
+        <!-- Icon 4 -->
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="24dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_maps"
-            android:layout_toEndOf="@+id/icon3"
-            android:contentDescription="Icon 4" />
+            android:orientation="vertical"
+            android:gravity="center">
 
+            <ImageView
+                android:id="@+id/icon4"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_maps"
+                android:contentDescription="Icon 4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Maps" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
