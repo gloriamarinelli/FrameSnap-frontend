@@ -14,7 +14,8 @@
         android:background="@drawable/back_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        app:cardElevation="0dp"
+    android:padding="16dp"
         >
 
         <!-- Immagine dell'amico -->

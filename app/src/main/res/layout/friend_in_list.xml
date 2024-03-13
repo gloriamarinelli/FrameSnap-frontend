@@ -7,17 +7,25 @@
     android:background="#ffff"
     >
 
+
+    <ImageView
+        android:id="@+id/user"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_user" />
+
     <TextView
         android:id="@+id/usernameTextView"
-        android:layout_width="0dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
-        android:text="Username" />
+        android:text="Username"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/removeFriendIcon"
