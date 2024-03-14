@@ -157,8 +157,10 @@ class FeedActivity: AppCompatActivity() {
         }
 
         icon2.setOnClickListener {
-            setMainFragment(PaintsFragment())
+            val paintsFragment = PaintsFragment()
+            setMainFragment(paintsFragment)
         }
+
 
         icon3.setOnClickListener {
             val profileFragment = ProfileFragment()
@@ -169,9 +171,6 @@ class FeedActivity: AppCompatActivity() {
             val mapFragment = MapFragment()
             setMainFragment(mapFragment)
         }
-
-
-
     }
 
     private fun setMainFragment(fragment: Fragment) {

@@ -1,6 +1,11 @@
 package com.example.macc
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,17 +20,17 @@ import retrofit2.http.GET
 
 data class PaintBackend(val id: Int, val paint: String, val paintName: String)
 data class GetPaintsResponse(val paints: List<PaintBackend>, val status: Int)
-interface GetPaintAPI {
+interface GetPaintsAPI {
     @GET("getPaints")
     fun getPaints(): Call<GetPaintsResponse>
 }
 
-val apiGetPaints = retrofit.create(GetPaintAPI::class.java)
+val apiGetPaints = retrofit.create(GetPaintsAPI::class.java)
 
-class PaintsFragment: Fragment() {
+class PaintsFragment: Fragment(), PaintsAdapter.OnItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
-
+    private lateinit var paintsAdapter: PaintsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +58,7 @@ class PaintsFragment: Fragment() {
                         if (status == 200) {
                             paintsList.addAll(it.paints)
                             Log.d("PaintsFragment", "Paints added")
-
+                            setupAdapter(paintsList)
                         }
                         else {
                             Log.e("PaintsFragment", "${it.status}")
@@ -72,8 +77,37 @@ class PaintsFragment: Fragment() {
 
         return view
     }
+    private fun setupAdapter(paintsList: List<PaintBackend>) {
+        val finalPaintsList: MutableList<Paint> = mutableListOf()
 
+        for (paint in paintsList) {
+            val id = paint.id
+            val paint_bytes = Base64.decode(paint.paint, Base64.DEFAULT)
+            val paint_bitmap: Bitmap? = BitmapFactory.decodeByteArray(paint_bytes, 0, paint_bytes!!.size)
+            val paint_name = paint.paintName
+
+            val new_paint = Paint(id, paint_bitmap, paint_name)
+            finalPaintsList.add(new_paint)
+        }
+
+        // Initialize and set the adapter
+        paintsAdapter = PaintsAdapter(finalPaintsList, object : PaintsAdapter.OnItemClickListener {
+            override fun onItemClick(paint: Paint) {
+                val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putInt("paintId", paint.id)
+                editor.apply()
+
+                val intent = Intent(requireContext(), CameraFragment::class.java)
+                startActivity(intent)
+            }
+        })
+        recyclerView.adapter = paintsAdapter
     }
 
+    override fun onItemClick(paint: Paint) {
+        // Necessary for avoiding errors; handled in a different part of the code
+    }
 
+}
 

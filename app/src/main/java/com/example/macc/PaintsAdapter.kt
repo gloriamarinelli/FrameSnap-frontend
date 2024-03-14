@@ -33,7 +33,6 @@ class PaintsAdapter(private val paintsList: List<Paint>, private val onItemClick
     class PaintViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val paintImage: ImageView = itemView.findViewById(R.id.paintImage)
         val paintName: TextView = itemView.findViewById(R.id.paintName)
-        // L'icona ic_paint_icon è già gestita nel layout XML e non è necessario qui
     }
 
     interface OnItemClickListener {

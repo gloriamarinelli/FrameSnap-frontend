@@ -37,6 +37,13 @@
            android:name=".FriendProfileActivity"
             android:label="FriendProfileActivity"/>
         <activity
+            android:name=".CameraFragment"
+            android:label="CameraFragment" />
+        <activity
+            android:name=".ConfirmPhotoActivity"
+            android:label="ConfirmPhotoActivity" />
+
+        <activity
             android:name=".FeedActivity"
             android:label="FeedActivity"/>
                <activity

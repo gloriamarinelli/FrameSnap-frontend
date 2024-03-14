@@ -42,12 +42,13 @@
         android:layout_width="330dp"
         android:layout_height="500dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="100dp" />
+        android:layout_marginTop="100dp" >
 
-    <ImageView
-        android:id="@+id/photoImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/photoImageView"
+            android:layout_width="354dp"
+            android:layout_height="match_parent" />
+    </androidx.camera.view.PreviewView>
 
     <!--
     <Button
@@ -70,8 +71,13 @@
         android:layout_width="150dp"
         android:layout_height="700dp"
         android:layout_below="@id/previewView"
-        android:layout_marginTop="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="131dp"
         android:layout_marginLeft="100dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="130dp"
+        android:backgroundTint="@color/lavander"
         android:text="Capture" />
 
 </RelativeLayout>

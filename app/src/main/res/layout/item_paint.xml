@@ -8,7 +8,7 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
     android:backgroundTint="@color/white"
-app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@color/white"
     >
 
     <LinearLayout
@@ -29,7 +29,8 @@ app:cardBackgroundColor="@color/white"
             android:layout_height="100dp"
             android:scaleType="centerCrop"
             android:src="@drawable/paint_n1"
-            android:contentDescription="Paint Image"/>
+            android:contentDescription="Paint Image"
+            />
 
         <TextView
             android:id="@+id/paintName"
