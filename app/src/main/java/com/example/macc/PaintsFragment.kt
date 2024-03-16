@@ -18,7 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.http.GET
 
-data class PaintBackend(val id: Int, val paint: String, val paintName: String)
+data class PaintBackend(val id: Int, val paint: String, val paintName: String, val paintYear: String)
 data class GetPaintsResponse(val paints: List<PaintBackend>, val status: Int)
 interface GetPaintsAPI {
     @GET("getPaints")
@@ -85,8 +85,9 @@ class PaintsFragment: Fragment(), PaintsAdapter.OnItemClickListener {
             val paint_bytes = Base64.decode(paint.paint, Base64.DEFAULT)
             val paint_bitmap: Bitmap? = BitmapFactory.decodeByteArray(paint_bytes, 0, paint_bytes!!.size)
             val paint_name = paint.paintName
+            val paint_year = paint.paintYear
 
-            val new_paint = Paint(id, paint_bitmap, paint_name)
+            val new_paint = Paint(id, paint_bitmap, paint_name, paint_year)
             finalPaintsList.add(new_paint)
         }
 

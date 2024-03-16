@@ -6,11 +6,11 @@
     android:background="#ffff"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -25,25 +25,25 @@
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbarTop"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize">
+                    android:layout_height="47dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Profile"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
                         android:layout_gravity="center"
                         android:layout_marginTop="8dp"
-                        android:textColor="@color/lavander"/>
+                        android:text="Profile"
+                        android:textColor="@color/lavander"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/settingsIcon"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:src="@drawable/ic_settings"
                         android:layout_gravity="end"
-                        android:layout_marginEnd="17dp" />
+                        android:layout_marginEnd="17dp"
+                        android:src="@drawable/ic_settings" />
                 </androidx.appcompat.widget.Toolbar>
 
                 <ImageView

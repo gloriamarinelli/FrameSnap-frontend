@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="7dp"
-        android:text="Create an Account"
+        android:text="Create an account"
        />
 
     <EditText

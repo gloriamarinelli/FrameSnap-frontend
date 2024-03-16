@@ -20,6 +20,7 @@ class PaintsAdapter(private val paintsList: List<Paint>, private val onItemClick
         val paint = paintsList[position]
         holder.paintImage.setImageBitmap(paint.paint)
         holder.paintName.text = paint.paint_name
+        holder.paintYear.text = paint.paint_year
 
         holder.itemView.setOnClickListener {
             onItemClickListener.onItemClick(paint)
@@ -33,6 +34,7 @@ class PaintsAdapter(private val paintsList: List<Paint>, private val onItemClick
     class PaintViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val paintImage: ImageView = itemView.findViewById(R.id.paintImage)
         val paintName: TextView = itemView.findViewById(R.id.paintName)
+        val paintYear: TextView = itemView.findViewById(R.id.paintYear)
     }
 
     interface OnItemClickListener {
