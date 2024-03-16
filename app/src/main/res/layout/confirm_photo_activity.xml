@@ -10,21 +10,6 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/backButton"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/back_arrow"
-            android:layout_gravity="start"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="15dp"
-            android:contentDescription="Back" />
-
-    </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
@@ -72,5 +57,21 @@
             android:layout_gravity="center"
             android:onClick="onAcceptClick" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:contentDescription="Back"
+            android:src="@drawable/back_arrow" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

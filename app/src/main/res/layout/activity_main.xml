@@ -10,18 +10,12 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Maps"
-        android:textSize="18sp"
-        android:textColor="@android:color/black" />
 
     <!-- Aggiungi altri elementi al LinearLayout se necessario -->
 
 </LinearLayout>
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         class="com.google.android.gms.maps.SupportMapFragment"
         android:id="@+id/map_fragment"
         android:layout_width="match_parent"

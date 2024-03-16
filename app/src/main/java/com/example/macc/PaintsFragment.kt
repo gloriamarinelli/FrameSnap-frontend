@@ -107,7 +107,13 @@ class PaintsFragment: Fragment(), PaintsAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(paint: Paint) {
-        // Necessary for avoiding errors; handled in a different part of the code
+        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt("paintId", paint.id)
+        editor.apply()
+
+        val intent = Intent(requireContext(), CameraFragment::class.java)
+        startActivity(intent)
     }
 
 }

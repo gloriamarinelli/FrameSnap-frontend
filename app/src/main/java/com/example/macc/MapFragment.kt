@@ -1,4 +1,3 @@
-package com.example.macc
 
 import android.content.pm.PackageManager
 import android.location.Location
@@ -9,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.example.macc.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -24,6 +24,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val FINE_PERMISSION_CODE = 1
     private lateinit var myMap: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var mapReady = false // Flag to track if the map is ready
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,13 +34,19 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val view = inflater.inflate(R.layout.map_fragment, container, false)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        getLastLocation()
-
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         myMap = googleMap
+        mapReady = true // Set flag to true when map is ready
 
         // Remove existing markers
         myMap.clear()
@@ -60,6 +67,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             val casualPoint = LatLng(rome.latitude + latOffset, rome.longitude + lngOffset)
             myMap.addMarker(MarkerOptions().position(casualPoint).title("Casual Point $i"))
         }
+
+        // Call getLastLocation only if map is ready
+        if (::fusedLocationProviderClient.isInitialized && mapReady) {
+            getLastLocation()
+        }
     }
 
     private fun getLastLocation() {
@@ -79,6 +91,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             return
         }
 
+        if (!::myMap.isInitialized) {
+            // If map is not initialized yet, wait until it's ready
+            return
+        }
+
         val task: Task<Location> = fusedLocationProviderClient.lastLocation
         task.addOnSuccessListener { location ->
             if (location != null) {
@@ -90,13 +107,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         .title("Your Location")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                 )
-
-                val mapFragment =
-                    childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-                mapFragment.getMapAsync(this)
             }
         }
     }
+
 
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(

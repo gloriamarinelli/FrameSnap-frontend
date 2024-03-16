@@ -23,8 +23,8 @@
 
         <ImageView
             android:id="@+id/paintImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:scaleType="centerCrop"
             android:src="@drawable/paint_n1"
             android:contentDescription="Paint Image"
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Paint Name"
-            android:textSize="14sp"
+            android:textSize="10sp"
             android:layout_gravity="center"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -54,8 +54,8 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_gravity="end"
             android:src="@drawable/camera_icon"
             android:contentDescription="Paint Icon"

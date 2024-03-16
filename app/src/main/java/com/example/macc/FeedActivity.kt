@@ -1,5 +1,6 @@
 package com.example.macc
 
+import MapFragment
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
