@@ -1,4 +1,4 @@
-package com.example.styleup
+package com.example.macc
 
 import android.graphics.ImageFormat
 import android.media.Image

@@ -1,135 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".CameraFragment">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageFromData"
+    <TextureView
+        android:id="@+id/textureView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"/>
+        android:layout_above="@id/captureButton"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp" />
 
-    <LinearLayout
-        android:id="@+id/topLayout"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:visibility="gone">
-        <RelativeLayout
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/inputImage"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:scaleType="fitXY" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Input Image"/>
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true">
 
-        </RelativeLayout>
         <RelativeLayout
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
             <ImageView
-                android:id="@+id/greyScaleImage"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:scaleType="fitXY" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Grey Scale Image"/>
+                android:id="@+id/backButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/back_arrow"
+                android:layout_gravity="start"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:contentDescription="Back" />
 
         </RelativeLayout>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
-        android:id="@+id/middleLayout"
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="330dp"
+        android:layout_height="500dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="100dp" />
+
+    <ImageView
+        android:id="@+id/photoImageView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:visibility="gone">
-        <RelativeLayout
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/cannyEdgeImage"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:scaleType="fitXY" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FF0000"
-                android:text="Canny Edge Mask"/>
+        android:layout_height="match_parent" />
 
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/floodFillImage"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:scaleType="fitXY" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Flood Fill Image"/>
+    <!--
+    <Button
+        android:id="@+id/captureButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:text=""
+        android:textSize="18sp"
+        android:textColor="#ffffff"
+        android:drawableTop="@drawable/ic_shoot_camera"
+        android:drawablePadding="8dp"
+        android:contentDescription="Capture" />
+        -->
+    <Button
+        android:id="@+id/captureButton"
+        android:layout_width="150dp"
+        android:layout_height="700dp"
+        android:layout_below="@id/previewView"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="100dp"
+        android:text="Capture" />
 
-        </RelativeLayout>
-    </LinearLayout>
+</RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/bottomLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:visibility="gone">
-        <RelativeLayout
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/HSVImage"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:scaleType="fitXY" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HSV Image"/>
-
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1">
-            <ImageView
-                android:id="@+id/outputImage"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:scaleType="fitXY" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Output Image"/>
-
-        </RelativeLayout>    </LinearLayout>
-
-
-</LinearLayout>

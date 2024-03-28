@@ -1,4 +1,4 @@
-package com.example.styleup
+package com.example.macc
 
 /*
  * Copyright 2020 The Android Open Source Project

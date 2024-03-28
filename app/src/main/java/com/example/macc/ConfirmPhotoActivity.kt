@@ -1,4 +1,4 @@
-package com.example.styleup
+package com.example.macc
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -12,10 +12,6 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import com.example.macc.FeedActivity
-import com.example.macc.ProfileFragment
-import com.example.macc.R
-import com.example.macc.retrofit
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

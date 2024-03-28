@@ -1,610 +1,365 @@
-package com.example.macc
+package com.example.styleup
 
-import android.Manifest
-import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Bundle
+import android.util.Log
+import android.content.Intent
+import android.widget.Button
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import android.Manifest
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
-import android.net.Uri
-import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.util.DisplayMetrics
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.FileProvider
-import androidx.core.graphics.drawable.toBitmap
-import org.opencv.android.Utils
-import org.opencv.core.Core
-import org.opencv.core.CvType
-import org.opencv.core.Mat
-import org.opencv.core.Point
-import org.opencv.core.Rect
-import org.opencv.core.Scalar
-import org.opencv.core.Size
-import org.opencv.imgproc.Imgproc
-import yuku.ambilwarna.AmbilWarnaDialog
+import android.graphics.Paint
+import android.graphics.RectF
+import android.icu.text.SimpleDateFormat
+import android.media.Image
+import androidx.camera.core.ImageCapture
 import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import android.net.Uri
+import android.util.Base64
+import android.view.Surface
+import androidx.annotation.OptIn
+import androidx.camera.core.ExperimentalGetImage
+import androidx.camera.core.ImageAnalysis
+import com.example.macc.ConfirmPhotoActivity
+import com.example.macc.FeedActivity
+import com.example.macc.R
+import com.example.macc.YuvToRgbConverter
+import com.example.macc.retrofit
+import com.example.macc.ml.AutoModel4
+import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.image.ImageProcessor
+import org.tensorflow.lite.support.image.TensorImage
+import org.tensorflow.lite.support.image.ops.ResizeOp
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Query
+import java.io.FileOutputStream
 
-typealias Coordinates = Pair<Point, Point>
+data class GetPaintByIdResponse(val paint: String?, val status: Int)
+interface GetPaintByIdAPI {
+    @GET("getPaintById")
+    fun getPaintById(@Query("id") paintId: Int): Call<GetPaintByIdResponse>
+}
 
 class CameraFragment : AppCompatActivity() {
 
-
-    companion object {
-        init {
-            System.loadLibrary("opencv_java")
-        }
-    }
-
-    var touchCount = 0
-    lateinit var tl: Point
-    private lateinit var br: Point
-    private lateinit var imageFromData: ImageView
-    private lateinit var inputImage: ImageView
-    private lateinit var greyScaleImage: ImageView
-    private lateinit var floodFillImage: ImageView
-    private lateinit var HSVImage: ImageView
-    private lateinit var cannyEdgeImage: ImageView
-    private lateinit var outputImage: ImageView
-    private lateinit var topLayout: LinearLayout
-    private lateinit var middleLayout: LinearLayout
-    private lateinit var bottomLayout: LinearLayout
-
+    private lateinit var previewView: PreviewView
+    private lateinit var captureButton: Button
+    private lateinit var imageCapture: ImageCapture
+    private val CAMERA_PERMISSION_REQUEST = 1001
+    private lateinit var outputDirectory: File
+    private lateinit var cameraExecutor: ExecutorService
     lateinit var bitmap: Bitmap
-    var chosenColor = Color.RED
-//        Scalar(200.0, 0.0, 0.0)
-
-    private val TAG = CameraFragment::class.java.simpleName
-
-
-    private enum class LoadImage {
-        PICK_FROM_CAMERA,
-        PICK_FROM_GALLERY
-    }
-//    private val PICK_FROM_CAMERA = 1
-//    private val PICK_FROM_GALLERY = 2
-
-    private var texture = false
-
-    private val PERMISSIONS = arrayOf<String>(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.CAMERA
-    )
+    lateinit var model: AutoModel4
+    lateinit var imageProcessor: ImageProcessor
+    lateinit var imageView: ImageView
+    private lateinit var imageAnalyzer: ImageAnalysis
+    var paintBitmap: Bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+    lateinit var paintImage: Bitmap
+    var paintBitmapCopy = paintBitmap.copy(Bitmap.Config.ARGB_8888, true)
+    lateinit var cameraProvider: ProcessCameraProvider
+    val paint = Paint()
+    var ok: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.camera_fragment)
+        outputDirectory = getOutputDirectory()
+        cameraExecutor = Executors.newSingleThreadExecutor()
+        imageProcessor = ImageProcessor.Builder().add(ResizeOp(192, 192, ResizeOp.ResizeMethod.BILINEAR)).build()
+        model = AutoModel4.newInstance(this)
+        captureButton = findViewById(R.id.captureButton)
+        imageView = findViewById(R.id.photoImageView)
+        previewView = findViewById(R.id.previewView)
+        paint.setColor(Color.YELLOW)
 
-        tl = Point()
-        br = Point()
-
-        openCamera()
-
-        // Initialize ImageViews
-        imageFromData = findViewById(R.id.imageFromData)
-        inputImage = findViewById(R.id.inputImage)
-        greyScaleImage = findViewById(R.id.greyScaleImage)
-        floodFillImage = findViewById(R.id.floodFillImage)
-        HSVImage = findViewById(R.id.HSVImage)
-        cannyEdgeImage = findViewById(R.id.cannyEdgeImage)
-        outputImage = findViewById(R.id.outputImage)
-
-        // Initialize Layouts
-        topLayout = findViewById(R.id.topLayout)
-        middleLayout = findViewById(R.id.middleLayout)
-        bottomLayout = findViewById(R.id.bottomLayout)
-    }
-
-    private fun openGallery() {
-        val i = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(i, LoadImage.PICK_FROM_GALLERY.ordinal)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main,menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.action_open_img -> {
-                showImage()
-            }
-            R.id.action_process_image -> {
-                showResultLayouts()
-            }
-            R.id.action_take_photo -> {
-                openCamera()
-            }
-            R.id.action_get_gallery -> {
-                openGallery()
-            }
-            R.id.action_get_color -> {
-                chooseColor()
-            }
-            R.id.action_get_texture -> {
-                chooseTexture()
-            }
+        val backButton: ImageView = findViewById(R.id.backButton)
+        backButton.setOnClickListener {
+            val intent = Intent(this, FeedActivity::class.java)
+            startActivity(intent)
         }
-        return  true
+
+        val cameraPermission = Manifest.permission.CAMERA
+        if (ContextCompat.checkSelfPermission(this, cameraPermission) == PackageManager.PERMISSION_GRANTED) {
+            openCamera()
+        } else {
+            ActivityCompat.requestPermissions(this, arrayOf(cameraPermission), CAMERA_PERMISSION_REQUEST)
+        }
+
+        getSelectedPaint {
+            paintImage = it
+            ok = true
+        }
     }
 
-    private fun chooseTexture() {
-        texture = true
-    }
+    private fun getSelectedPaint(callback: (Bitmap) -> Unit) {
+        // Retrieve selected paint
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val paintId = sharedPreferences.getInt("paintId", 0)
 
-    @Deprecated("Deprecated in Java")
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        when (requestCode) {
-            LoadImage.PICK_FROM_CAMERA.ordinal -> if (resultCode == Activity.RESULT_OK) {
-
+        val getPaintByIdApiService = retrofit.create(GetPaintByIdAPI::class.java)
+        getPaintByIdApiService.getPaintById(paintId).enqueue(object : Callback<GetPaintByIdResponse> {
+            override fun onResponse(call: Call<GetPaintByIdResponse>, response: Response<GetPaintByIdResponse>) {
                 try {
-//                    bitmap = data?.getExtras()?.get("data") as Bitmap
-                    imageFromData.setImageURI(Uri.parse(imageFilePath))
+                    // Access the result using response.body()
+                    val result: GetPaintByIdResponse? = response.body()
 
-                    bitmap = imageFromData.drawable.toBitmap()
-                    bitmap = getResizedBitmap(bitmap,bitmap.width/5,bitmap.height/5)
-                    showImage()
-//                    imageFromData.setImageBitmap(bitmap)
-//                    gaussianOutput(bitmap)
-//                    processImage(bitmap)
-//                    detectAndFillContours(bitmap)
-//                    imageView.setImageBitmap(steptowatershed(bitmap))
-//                    paintSelected(bitmap)
-//                    extractForeGround(bitmap)
-//                    makeContours(bitmap)
-//                    Log.e(TAG, "Bitmap image: "+ bitmap)
-
-                } catch (e: IOException) {
-                    e.printStackTrace()
+                    // Check if the result is not null before accessing properties
+                    result?.let {
+                        val status = it.status
+                        if (status == 200) {
+                            Log.d("CameraFragment", "PaintOK")
+                            val paintByteArray = Base64.decode(it.paint, Base64.DEFAULT)
+                            paintBitmapCopy = BitmapFactory.decodeByteArray(paintByteArray, 0, paintByteArray!!.size)
+                        }
+                        else {
+                            Log.e("CameraFragment", "${it.status}")
+                        }
+                    }
+                    callback(paintBitmapCopy)
+                } catch (e: Exception) {
+                    // Do nothing
+                    Log.e("CameraFragment", "[ERROR] "+e.toString())
                 }
             }
-            LoadImage.PICK_FROM_GALLERY.ordinal -> if (resultCode == Activity.RESULT_OK) {
-                loadFromGallery(data)
+            override fun onFailure(call: Call<GetPaintByIdResponse>, t: Throwable) {
+                Log.e("CameraFragment", "[ERR] ${t.message}")
+                // retry here
             }
-        }
+        })
+    }
 
-        imageFromData.setOnTouchListener(object : View.OnTouchListener {
+    override fun onDestroy() {
+        super.onDestroy()
+        cameraProvider?.unbindAll() // where cameraProvider is a reference to the ProcessCameraProvider
+        cameraExecutor.shutdown()
+        model.close()
+    }
 
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                if (event.action == MotionEvent.ACTION_DOWN) {
-                    if (touchCount == 0) {
-                        tl.x = event.x.toDouble()
-                        tl.y = event.y.toDouble()
-//                        touchCount++
+    @OptIn(ExperimentalGetImage::class) private fun openCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
-                        if(texture) {
-                            applyTexture(bitmap, tl)
-                        } else {
-                            rpPaintHSV(bitmap,tl)
+        cameraProviderFuture.addListener({
+            cameraProvider = cameraProviderFuture.get()
+
+            val preview = Preview.Builder()
+                .setTargetRotation(previewView.display.rotation)
+                .build()
+
+            imageAnalyzer = ImageAnalysis.Builder()
+                .setTargetRotation(previewView.display.rotation)
+                .build()
+                .also {
+                    it.setAnalyzer(cameraExecutor) { imageProxy ->
+                        try {
+                            // Process the image and update UI here
+                            if (imageProxy.image != null) {
+                                processAndDrawImage(imageProxy.image!!)
+                            }
+                            else {
+                                Log.e("CameraFragment", "imageProxy.image is null!")
+                            }
+                        } finally {
+                            imageProxy.close()
                         }
-//
-
                     }
                 }
 
-                return true
+            preview.setSurfaceProvider(previewView.surfaceProvider)
+
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+            try {
+                // Add ImageCapture use case
+                imageCapture = ImageCapture.Builder()
+                    .setTargetRotation(previewView.display.rotation)
+                    .build()
+
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture, imageAnalyzer)
+
+            } catch (e: Exception) {
+                Log.e("openCamera()", "Use case binding failed", e)
             }
-        })
-
+        }, ContextCompat.getMainExecutor(this))
     }
 
-    private fun loadFromGallery(data:Intent?) {
-        val selectedImage = data?.data
-        val filePathColumn: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = getContentResolver().query(selectedImage!!,filePathColumn, null, null, null)
-        cursor?.moveToFirst()
-        val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
-        val picturePath = cursor?.getString(columnIndex!!)
-        cursor?.close()
+    private fun processAndDrawImage(image: Image) {
+        val yuvToRgbConverter= YuvToRgbConverter(this)
+        bitmap = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
+        yuvToRgbConverter.yuvToRgb(image, bitmap)
 
-        bitmap = BitmapFactory.decodeFile(picturePath)
+        val rotationDegrees = when (previewView.display.rotation) {
+            Surface.ROTATION_0 -> 90
+            else -> 0
+        }
+        val matrix = Matrix()
+        matrix.postRotate(rotationDegrees.toFloat())
+        val rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
 
-        bitmap = getResizedBitmap(bitmap,bitmap.width/5,bitmap.height/5)
-        showImage()
+        var tensorImage = TensorImage(DataType.UINT8)
+        tensorImage.load(rotatedBitmap)
+        tensorImage = imageProcessor.process(tensorImage)
+
+        // Creates inputs for reference.
+        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 192, 192, 3), DataType.UINT8)
+        inputFeature0.loadBuffer(tensorImage.buffer)
+
+        // Runs model inference and gets result.
+        val outputs = model.process(inputFeature0)
+        // val outputFeature0 = outputs.outputFeature0AsTensorBuffer contains the predictions!
+
+        val outputFeature0 = outputs.outputFeature0AsTensorBuffer.floatArray
+
+        var mutable = rotatedBitmap.copy(Bitmap.Config.ARGB_8888, true)
+        var canvas = Canvas(mutable)
+
+        var h = rotatedBitmap.height
+        var w = rotatedBitmap.width
+        var x = 0
+
+        /*while(x <= 49) {
+            if(outputFeature0.get(x+2) > 0.45) {
+                // Draw circle on scaled coordinates
+                canvas.drawCircle(outputFeature0.get(x+1)*w, outputFeature0.get(x)*h, 10f, paint)
+            }
+            x += 3  // Go to the next point
+        }*/
+
+        // Overlay the paint on the image
+        overlayPaint(mutable, outputFeature0)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            LoadImage.PICK_FROM_CAMERA.ordinal -> {
+    private fun overlayPaint(image: Bitmap, outputFeature0: FloatArray) {
+        val canvas = Canvas(image)
+        val paint2 = Paint(Paint.ANTI_ALIAS_FLAG)
 
-                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+        val h = image.height.toFloat()
+        val w = image.width.toFloat()
 
-                    Log.e(TAG, "Permission has been denied by user")
-                } else {
-                    openCamera()
-//                    val i =  Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//                    startActivityForResult(i, PICK_FROM_GALLERY)
-                    Log.e(TAG, "Permission has been granted by user")
+        /*
+        0 nose              y = 0; x = 1; conf = 2
+        1 leftEye           y = 3; x = 4; conf = 5
+        2 rightEye          y = 6; x = 7; conf = 8
+        3 leftEar           y = 9; x = 10; conf = 11
+        4 rightEar          y = 12; x = 13; conf = 14
+        5 leftShoulder      y = 15; x = 16; conf = 17
+        6 rightShoulder     y = 18; x = 19; conf = 20
+        7 leftElbow         y = 21; x = 22; conf = 23
+        8 rightElbow        y = 24; x = 25; conf = 26
+        9 leftWrist         y = 27; x = 28; conf = 29
+        10 rightWrist       y = 30; x = 31; conf = 32
+        11 leftHip          y = 33; x = 34; conf = 35
+        12 rightHip         y = 36; x = 37; conf = 38
+        13 leftKnee         y = 39; x = 40; conf = 41
+        14 rightKnee        y = 42; x = 43; conf = 44
+        15 leftAnkle        y = 45; x = 46; conf = 47
+        16 rightAnkle       y = 48; x = 49; conf = 50
+
+        For each keypoint, there are three coordinates: x, y, confidence
+         */
+
+        // Get the corner points
+        val topLeftX = outputFeature0[15] * w
+        val topLeftY = outputFeature0[16] * h
+        val leftShoulderConf = outputFeature0[17]
+
+        val topRightX = outputFeature0[18] * w
+        val topRightY = outputFeature0[19] * h
+        val rightShoulderConf = outputFeature0[20]
+
+        val bottomLeftX = outputFeature0[33] * w
+        val bottomLeftY = outputFeature0[34] * h
+        val leftHipConf = outputFeature0[35]
+
+        val bottomRightX = outputFeature0[36] * w
+        val bottomRightY = outputFeature0[37] * h
+        val rightHipConf = outputFeature0[38]
+
+        // Calculate the position to overlay the paint
+        val left = minOf(topLeftX, bottomLeftX) // Left edge of the rectangle (minimum x-coordinate of shoulders and hips)
+        val top = minOf(topLeftY, topRightY) // Top edge of the rectangle (minimum y-coordinate of shoulders)
+        val right = maxOf(topRightX, bottomRightX) // Right edge of the rectangle (maximum x-coordinate of shoulders and hips)
+        val bottom = maxOf(bottomLeftY, bottomRightY) // Bottom edge of the rectangle (maximum y-coordinate of hips)
+
+        Log.d("CameraFragment", "Left: ${left}, Top: ${top}, Right: ${right}, Bottom: ${bottom}")
+
+
+        // Draw the paint on the canvas
+        if(ok) {
+            var x = 0
+
+            while(x <= 49) {
+                if(outputFeature0.get(x+2) > 0.45) {
+                    // Draw circle on scaled coordinates
+                    canvas.drawBitmap(paintBitmapCopy, null, RectF(left, top, right, bottom), paint)
+                }
+                x += 3  // Go to the next point
+            }
+
+
+            runOnUiThread {
+                imageView.setImageBitmap(image)
+
+                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                captureButton.setOnClickListener {
+                    val photoFile = File(
+                        outputDirectory,
+                        SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(System.currentTimeMillis()) + ".jpg"
+                    )
+
+                    FileOutputStream(photoFile).use {outputStream ->
+                        image.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                    }
+                    val savedUri = Uri.fromFile(photoFile)
+                    val editor = sharedPreferences.edit()
+                    editor.putString("savedUri", savedUri.toString())
+                    editor.apply()
+
+                    val intent = Intent(this@CameraFragment, ConfirmPhotoActivity::class.java)
+                    startActivity(intent)
                 }
             }
-
         }
     }
 
-    private lateinit var imageFilePath: String
-
-    private fun createImageFile(): File {
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format( Date())
-        val imageFileName = "IMG_" + timeStamp + "_"
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val image = File.createTempFile(
-            imageFileName,  /* prefix */
-            ".jpg",         /* suffix */
-            storageDir      /* directory */
-        )
-
-        imageFilePath = image.getAbsolutePath()
-        return image;
-    }
-
-    private fun saveImage(image: Bitmap) {
-        val pictureFile = createImageFile()
-        if (pictureFile == null) {
-            Log.e(TAG, "Error creating media file, check storage permissions: ")
-            return
+       private fun getOutputDirectory(): File {
+        val mediaDir = externalMediaDirs.firstOrNull()?.let {
+            File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
         }
-        try {
-            val fos = FileOutputStream(pictureFile);
-            image.compress(Bitmap.CompressFormat.PNG, 90, fos)
-            fos.close()
-        } catch (e: FileNotFoundException) {
-            Log.e(TAG, "File not found: " + e.message)
-        } catch (e: IOException) {
-            Log.e(TAG, "Error accessing file: " + e.message)
-        }
+        return if (mediaDir != null && mediaDir.exists())
+            mediaDir else filesDir
     }
 
-    private fun openCamera() {
-        if (ActivityCompat.checkSelfPermission(baseContext, Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED) {
+    fun resizeBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
+        val scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888)
 
-            ActivityCompat.requestPermissions(this, PERMISSIONS, LoadImage.PICK_FROM_CAMERA.ordinal)
+        val scaleX = newWidth.toFloat() / bitmap.width
+        val scaleY = newHeight.toFloat() / bitmap.height
+        val scaleMatrix = Matrix()
+        scaleMatrix.setScale(scaleX, scaleY, 0f, 0f)
 
-        } else {
-            val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            var photoFile: File? = null
-            try {
-                photoFile = createImageFile()
-            } catch (ex: IOException) {
-                // Error occurred while creating the File
-            }
-            if (photoFile != null) {
-                val photoURI = FileProvider.getUriForFile(this,"com.example.paintapp.provider", photoFile)
-                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-//                captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                startActivityForResult(captureIntent, LoadImage.PICK_FROM_CAMERA.ordinal)
-            }
+        val canvas = Canvas(scaledBitmap)
+        canvas.drawBitmap(bitmap, scaleMatrix, Paint(Paint.FILTER_BITMAP_FLAG))
 
-        }
+        return scaledBitmap
     }
-
-    fun getResizedBitmap(bm: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
-        val width = bm.getWidth()
-        val height = bm.getHeight()
-        val scaleWidth = newWidth / width.toFloat()
-        val scaleHeight = newHeight / height.toFloat()
-        // CREATE A MATRIX FOR THE MANIPULATION
-        val matrix =  Matrix()
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight)
-
-        // "RECREATE" THE NEW BITMAP
-        val resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true)
-
-        return resizedBitmap
-    }
-
-
-
-    private fun rpPaintHSV(bitmap: Bitmap, p: Point): Mat {
-        val cannyMinThres = 30.0
-        val ratio = 2.5
-
-        // show intermediate step results
-        // grid created here to do that
-        showResultLayouts()
-
-        val mRgbMat = Mat()
-        Utils.bitmapToMat(bitmap, mRgbMat)
-
-        showImage(mRgbMat,inputImage)
-
-        Imgproc.cvtColor(mRgbMat,mRgbMat,Imgproc.COLOR_RGBA2RGB)
-
-        val mask = Mat(Size(mRgbMat.width()/8.0, mRgbMat.height()/8.0), CvType.CV_8UC1, Scalar(0.0))
-//        Imgproc.dilate(mRgbMat, mRgbMat,mask, Point(0.0,0.0), 5)
-
-        val img = Mat()
-        mRgbMat.copyTo(img)
-
-        // grayscale
-        val mGreyScaleMat = Mat()
-        Imgproc.cvtColor(mRgbMat, mGreyScaleMat, Imgproc.COLOR_RGB2GRAY, 3)
-        Imgproc.medianBlur(mGreyScaleMat,mGreyScaleMat,3)
-
-
-        val cannyGreyMat = Mat()
-        Imgproc.Canny(mGreyScaleMat, cannyGreyMat, cannyMinThres, cannyMinThres*ratio, 3)
-
-        showImage(cannyGreyMat,greyScaleImage)
-
-        //hsv
-        val hsvImage = Mat()
-        Imgproc.cvtColor(img,hsvImage,Imgproc.COLOR_RGB2HSV)
-
-        //got the hsv values
-        val list = ArrayList<Mat>(3)
-        Core.split(hsvImage, list)
-
-        val sChannelMat = Mat()
-        Core.merge(listOf(list.get(1)), sChannelMat)
-        Imgproc.medianBlur(sChannelMat,sChannelMat,3)
-        showImage(sChannelMat,floodFillImage)
-
-        // canny
-        val cannyMat = Mat()
-        Imgproc.Canny(sChannelMat, cannyMat, cannyMinThres, cannyMinThres*ratio, 3)
-        showImage(cannyMat,HSVImage)
-
-        Core.addWeighted(cannyMat,0.5, cannyGreyMat,0.5 ,0.0,cannyMat)
-        Imgproc.dilate(cannyMat, cannyMat,mask, Point(0.0,0.0), 5)
-
-        showImage(cannyMat,cannyEdgeImage)
-
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        val height = displayMetrics.heightPixels
-        val width = displayMetrics.widthPixels
-
-        val seedPoint = Point(p.x*(mRgbMat.width()/width.toDouble()), p.y*(mRgbMat.height()/height.toDouble()))
-
-        Imgproc.resize(cannyMat, cannyMat, Size(cannyMat.width() + 2.0, cannyMat.height() + 2.0))
-
-        Imgproc.medianBlur(mRgbMat,mRgbMat,15)
-
-        val floodFillFlag = 8
-        Imgproc.floodFill(
-            mRgbMat,
-            cannyMat,
-            seedPoint,
-            Scalar(Color.red(chosenColor).toDouble(),Color.green(chosenColor).toDouble(),Color.blue(chosenColor).toDouble()),
-            Rect(),
-            Scalar(5.0, 5.0, 5.0),
-            Scalar(5.0, 5.0, 5.0),
-            floodFillFlag
-        )
-//        showImage(mRgbMat,floodFillImage)
-        Imgproc.dilate(mRgbMat, mRgbMat, mask, Point(0.0,0.0), 5)
-
-        //got the hsv of the mask image
-        val rgbHsvImage = Mat()
-        Imgproc.cvtColor(mRgbMat,rgbHsvImage,Imgproc.COLOR_RGB2HSV)
-
-        val list1 = ArrayList<Mat>(3)
-        Core.split(rgbHsvImage, list1)
-
-        //merged the "v" of original image with mRgb mat
-        val result = Mat()
-        Core.merge(listOf(list1.get(0),list1.get(1),list.get(2)), result)
-
-        // converted to rgb
-        Imgproc.cvtColor(result, result, Imgproc.COLOR_HSV2RGB)
-
-        Core.addWeighted(result,0.7, img,0.3 ,0.0,result )
-
-        showImage(result,outputImage)
-        return result
-    }
-
-
-    private fun showImage(image: Mat, view: ImageView) {
-        val mBitmap = Bitmap.createBitmap(image.cols(), image.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(image, mBitmap)
-        view.setImageBitmap(mBitmap)
-
-        bitmap = mBitmap
-        saveImage(bitmap)
-    }
-
-    private fun showResultLayouts() {
-        imageFromData.visibility = View.GONE
-
-        topLayout.visibility = View.VISIBLE
-        middleLayout.visibility = View.VISIBLE
-        bottomLayout.visibility = View.VISIBLE
-    }
-
-    private fun showImage() {
-        imageFromData.visibility = View.VISIBLE
-
-        topLayout.visibility = View.GONE
-        middleLayout.visibility = View.GONE
-        bottomLayout.visibility = View.GONE
-
-        try {
-            imageFromData.setImageBitmap(bitmap)
-        } catch (e: Exception) {
-            Toast.makeText(this@CameraFragment, "No image selected",Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun chooseColor() {
-        texture = false
-
-        val colorPicker = AmbilWarnaDialog(this@CameraFragment, chosenColor, object: AmbilWarnaDialog.OnAmbilWarnaListener {
-
-            override fun onCancel(dialog: AmbilWarnaDialog) {
-            }
-
-            override fun onOk(dialog: AmbilWarnaDialog ,color: Int) {
-                chosenColor = color
-            }
-        })
-
-        colorPicker.show()
-    }
-
-
-    private fun applyTexture(bitmap: Bitmap, p: Point) {
-        val cannyMinThres = 30.0
-        val ratio = 2.5
-
-        // show intermediate step results
-        // grid created here to do that
-        showResultLayouts()
-
-        val mRgbMat = Mat()
-        Utils.bitmapToMat(bitmap, mRgbMat)
-
-        showImage(mRgbMat,inputImage)
-
-        Imgproc.cvtColor(mRgbMat,mRgbMat,Imgproc.COLOR_RGBA2RGB)
-
-        val mask = Mat(Size(mRgbMat.width()/8.0, mRgbMat.height()/8.0), CvType.CV_8UC1, Scalar(0.0))
-//        Imgproc.dilate(mRgbMat, mRgbMat,mask, Point(0.0,0.0), 5)
-
-        val img = Mat()
-        mRgbMat.copyTo(img)
-
-        // grayscale
-        val mGreyScaleMat = Mat()
-        Imgproc.cvtColor(mRgbMat, mGreyScaleMat, Imgproc.COLOR_RGB2GRAY, 3)
-        Imgproc.medianBlur(mGreyScaleMat,mGreyScaleMat,3)
-
-
-        val cannyGreyMat = Mat()
-        Imgproc.Canny(mGreyScaleMat, cannyGreyMat, cannyMinThres, cannyMinThres*ratio, 3)
-
-        showImage(cannyGreyMat,greyScaleImage)
-
-        //hsv
-        val hsvImage = Mat()
-        Imgproc.cvtColor(img,hsvImage,Imgproc.COLOR_RGB2HSV)
-
-        //got the hsv values
-        val list = ArrayList<Mat>(3)
-        Core.split(hsvImage, list)
-
-        val sChannelMat = Mat()
-        Core.merge(listOf(list.get(1)), sChannelMat)
-        Imgproc.medianBlur(sChannelMat,sChannelMat,3)
-        showImage(sChannelMat,floodFillImage)
-
-        // canny
-        val cannyMat = Mat()
-        Imgproc.Canny(sChannelMat, cannyMat, cannyMinThres, cannyMinThres*ratio, 3)
-        showImage(cannyMat,HSVImage)
-
-        Core.addWeighted(cannyMat,0.5, cannyGreyMat,0.5 ,0.0,cannyMat)
-        Imgproc.dilate(cannyMat, cannyMat,mask, Point(0.0,0.0), 5)
-
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        val height = displayMetrics.heightPixels
-        val width = displayMetrics.widthPixels
-
-        val seedPoint = Point(p.x*(mRgbMat.width()/width.toDouble()), p.y*(mRgbMat.height()/height.toDouble()))
-
-        Imgproc.resize(cannyMat, cannyMat, Size(cannyMat.width() + 2.0, cannyMat.height() + 2.0))
-        val cannyMat1 = Mat()
-        cannyMat.copyTo(cannyMat1)
-
-//        Imgproc.medianBlur(mRgbMat,mRgbMat,15)
-
-        val wallMask = Mat(mRgbMat.size(),mRgbMat.type())
-
-        val floodFillFlag = 8
-        Imgproc.floodFill(
-            wallMask,
-            cannyMat,
-            seedPoint,
-            Scalar(255.0,255.0,255.0/*chosenColor.toDouble(),chosenColor.toDouble(),chosenColor.toDouble()*/),
-            Rect(),
-            Scalar(5.0, 5.0, 5.0),
-            Scalar(5.0, 5.0, 5.0),
-            floodFillFlag
-        )
-        showImage(wallMask,greyScaleImage)
-
-        showImage(cannyMat,cannyEdgeImage)
-
-        //second floodfill is not working 5
-        Imgproc.floodFill(
-            mRgbMat,
-            cannyMat1,
-            seedPoint,
-            Scalar(0.0,0.0,0.0/*chosenColor.toDouble(),chosenColor.toDouble(),chosenColor.toDouble()*/),
-            Rect(),
-            Scalar(5.0, 5.0, 5.0),
-            Scalar(5.0, 5.0, 5.0),
-            floodFillFlag
-        )
-        showImage(mRgbMat,HSVImage)
-
-        val texture = getTextureImage()
-
-        val textureImgMat = Mat()
-        Core.bitwise_and(wallMask ,texture,textureImgMat)
-
-        showImage(textureImgMat,floodFillImage)
-
-        val resultImage = Mat()
-        Core.bitwise_or(textureImgMat,mRgbMat,resultImage)
-
-        showImage(resultImage,outputImage)
-
-        ////alpha blending
-
-        //got the hsv of the mask image
-        val rgbHsvImage = Mat()
-        Imgproc.cvtColor(resultImage,rgbHsvImage,Imgproc.COLOR_RGB2HSV)
-
-        val list1 = ArrayList<Mat>(3)
-        Core.split(rgbHsvImage, list1)
-
-        //merged the "v" of original image with mRgb mat
-        val result = Mat()
-        Core.merge(listOf(list1.get(0),list1.get(1),list.get(2)), result)
-
-        // converted to rgb
-        Imgproc.cvtColor(result, result, Imgproc.COLOR_HSV2RGB)
-
-        Core.addWeighted(result,0.8, img,0.2 ,0.0,result )
-
-        showImage(result,outputImage)
-    }
-
-    private fun getTextureImage(): Mat {
-        var textureImage = BitmapFactory.decodeResource(getResources(), R.drawable.paint_n1)
-        textureImage = getResizedBitmap(textureImage,bitmap.width,bitmap.height)
-        val texture = Mat()
-        Utils.bitmapToMat(textureImage,texture)
-        Imgproc.cvtColor(texture,texture,Imgproc.COLOR_RGBA2RGB)
-        return texture
-    }
-
 }
