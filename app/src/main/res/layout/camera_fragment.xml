@@ -4,15 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextureView
-        android:id="@+id/textureView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/captureButton"
-        android:layout_below="@id/toolbar"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp" />
-
+    <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -37,42 +29,35 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <!-- Camera Preview -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
-        android:layout_width="330dp"
-        android:layout_height="500dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="100dp" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="10dp" />
 
+    <!-- ImageView to display captured photo -->
     <ImageView
         android:id="@+id/photoImageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
-    <!--
+    <!-- Capture Button -->
     <Button
         android:id="@+id/captureButton"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="16dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:text=""
+        android:text="Capture"
         android:textSize="18sp"
         android:textColor="#ffffff"
-        android:drawableTop="@drawable/ic_shoot_camera"
+        android:drawableTop="@drawable/camera_icon"
         android:drawablePadding="8dp"
         android:contentDescription="Capture" />
-        -->
-    <Button
-        android:id="@+id/captureButton"
-        android:layout_width="150dp"
-        android:layout_height="700dp"
-        android:layout_below="@id/previewView"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="100dp"
-        android:text="Capture" />
 
 </RelativeLayout>
-

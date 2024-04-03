@@ -93,8 +93,6 @@ class FeedActivity: AppCompatActivity() {
         mainFragmentContainer = findViewById(R.id.mainFragmentContainers)
         fragmentManager = supportFragmentManager
 
-        val paintsFragment = PaintsFragment()
-        setMainFragment(paintsFragment)
 
         if (fragmentSharedPreferences == "profile") {
             val editor = sharedPreferences.edit()
@@ -160,7 +158,7 @@ class FeedActivity: AppCompatActivity() {
         }
 
         icon2.setOnClickListener {
-           setMainFragment(PaintsFragment())
+           //setMainFragment(PaintsFragment())
         }
 
 
