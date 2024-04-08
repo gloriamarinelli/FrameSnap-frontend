@@ -3,9 +3,11 @@ package com.example.macc
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.OkHttpClient
+import org.opencv.android.OpenCVLoader
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -30,6 +32,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
 
+
+        if (OpenCVLoader.initDebug()) {
+            Log.i("OpenCV", "OpenCV successfully loaded.");
+        }
 
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val username = sharedPreferences.getString("username", "")

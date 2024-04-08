@@ -3,6 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
 android {
     namespace = "com.example.macc"
     compileSdk = 34
@@ -17,11 +21,23 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    android {
+        buildFeatures {
+            buildConfig = true
+        }
+    }
+
     buildTypes {
-        release {
-            isMinifyEnabled = false
+
+        /**
+         * By default, Android Studio configures the release build type to enable code
+         * shrinking, using minifyEnabled, and specifies the default ProGuard rules file.
+         */
+
+        getByName("release") {
+            isMinifyEnabled = true // Enables code shrinking for the release build type.
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
+                getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"
             )
         }
@@ -75,4 +91,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.gms:play-services-location:20.0.0")
     implementation("com.google.android.libraries.places:places:2.5.0")
+
+    implementation (project(":opencv"))
 }
