@@ -24,7 +24,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val FINE_PERMISSION_CODE = 1
     private lateinit var myMap: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private var mapReady = false // Flag to track if the map is ready
+    private var mapReady = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,12 +46,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         myMap = googleMap
-        mapReady = true // Set flag to true when map is ready
+        mapReady = true
 
-        // Remove existing markers
+
         myMap.clear()
 
-        // Add casual points spaced approximately 20 km apart in Rome
         val rome = LatLng(41.9028, 12.4964) // Updated coordinates for Rome
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(rome, 10f)) // Zoom in to Rome
 
@@ -68,7 +67,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             myMap.addMarker(MarkerOptions().position(casualPoint).title("Casual Point $i"))
         }
 
-        // Call getLastLocation only if map is ready
         if (::fusedLocationProviderClient.isInitialized && mapReady) {
             getLastLocation()
         }
@@ -92,14 +90,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         if (!::myMap.isInitialized) {
-            // If map is not initialized yet, wait until it's ready
             return
         }
 
         val task: Task<Location> = fusedLocationProviderClient.lastLocation
         task.addOnSuccessListener { location ->
             if (location != null) {
-                // Add a blue marker for the user's location
                 val userLatLng = LatLng(location.latitude, location.longitude)
                 myMap.addMarker(
                     MarkerOptions()
