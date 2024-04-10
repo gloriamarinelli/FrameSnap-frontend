@@ -19,7 +19,7 @@ Welcome to **FrameSnap**! This is a mobile application in which you'll find the 
 The architecture of the application is composed of:
 
 - A **frontend node**, that is a mobile application coded in Kotlin;
-- A **backend node**, that is a RESTful web service developed in python, through the Flask framework;
+- A **backend node**, that is a RESTful web service developed in python, through the Flask framework [(https://github.com/gloriamarinelli/FrameSnap.git)]
 - A **database node**, that is a MySQL DBMS.
 
 The backend node and the database node run on the [PythonAnywhere](https://www.pythonanywhere.com/) web hosting platform; this allows the user to run only the frontend node from its Android smartphone.
