@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import android.Manifest
+import android.content.ContentValues
 import android.graphics.Matrix
 import android.widget.LinearLayout
 import androidx.appcompat.widget.Toolbar
@@ -123,6 +124,7 @@ class CameraActivity: AppCompatActivity() {
         br = Point()
 
         openCamera()
+
 
     }
 
@@ -438,6 +440,8 @@ class CameraActivity: AppCompatActivity() {
 
         showImage(result,outputImage)
         return result
+
+
     }
 
     private fun showResultLayouts() {
@@ -589,6 +593,7 @@ class CameraActivity: AppCompatActivity() {
         Core.addWeighted(result,0.8, img,0.2 ,0.0,result )
 
         showImage(result,outputImage)
+
     }
 
     private fun getTextureImage(): Mat {
@@ -598,6 +603,11 @@ class CameraActivity: AppCompatActivity() {
         Utils.bitmapToMat(textureImage,texture)
         Imgproc.cvtColor(texture,texture,Imgproc.COLOR_RGBA2RGB)
         return texture
+
+
     }
 
+
+
 }
+
