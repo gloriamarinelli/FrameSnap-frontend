@@ -82,9 +82,6 @@ class ProfileFragment: Fragment(), FriendItemClickListener {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
 
-    private lateinit var postRecyclerView: RecyclerView
-    private lateinit var postAdapter: PostAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -175,19 +172,7 @@ class ProfileFragment: Fragment(), FriendItemClickListener {
             }
         })
 
-        //post
-        // Inizializza la RecyclerView e l'adapter
-        postRecyclerView = view.findViewById(R.id.postRecyclerView)
-        getSamplePosts { posts ->
-            postAdapter = PostAdapter(requireContext(), posts)
-            postRecyclerView.adapter = postAdapter
 
-            // Imposta il layout manager per la RecyclerView (ad esempio, LinearLayoutManager)
-            postRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-            // Aggiorna la visibilità del messaggio in base all'elenco dei post
-            updatePostList(posts)
-        }
 
         return view
     }
@@ -197,9 +182,8 @@ class ProfileFragment: Fragment(), FriendItemClickListener {
             if(friendsList.isEmpty()) {
                 val ko = AlertDialog.Builder(requireContext())
                 ko.setTitle("ERROR")
-                    .setMessage("You have no friends :(")
+                    .setMessage("Add a friend!")
                     .setPositiveButton("OK", DialogInterface.OnClickListener {dialog, which ->
-                        // Do nothing :)
                     })
                     .show()
             }
@@ -273,56 +257,9 @@ class ProfileFragment: Fragment(), FriendItemClickListener {
             .show()
     }
 
-    private fun updatePostList(samplePosts: List<Post>) {
-        // Controlla se l'elenco dei post è vuoto e imposta la visibilità di conseguenza
-        if (samplePosts.isEmpty()) {
-            noPostsMessage.visibility = View.VISIBLE
-        } else {
-            noPostsMessage.visibility = View.GONE
-        }
-    }
 
-    private fun getSamplePosts(callback: (MutableList<Post>) -> Unit) {
-        val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val username = sharedPreferences.getString("username", "")
-        val loggedUser = username
 
-        var posts: MutableList<Post> = mutableListOf()
 
-        getPostsByUsernameApiService.getPostsByUsername(username, loggedUser).enqueue(object : Callback<GetPostsResponse> {
-            override fun onResponse(call: Call<GetPostsResponse>, response: Response<GetPostsResponse>) {
-                val result: GetPostsResponse? = response.body()
-
-                // Check if the result is not null before accessing properties
-                result?.let { it ->
-                    val status = it.status
-                    if (status == 200) {
-                        for(post in it.posts) {
-                            val id = post.id
-                            val username = post.username
-                            val encodedImage = post.imageData
-                            val likes = post.likes
-                            val likedByLoggedUser = post.likedByLoggedUser
-
-                            val originalBytes = Base64.decode(encodedImage, Base64.DEFAULT)
-                            val bitmap = BitmapFactory.decodeByteArray(originalBytes, 0, originalBytes!!.size)
-
-                            val newPost = Post(id, username, bitmap, likes, likedByLoggedUser)
-                            posts.add(newPost)
-                        }
-                    }
-                    else {
-                        Log.e("ProfileFragment", "No posts")
-                    }
-                }
-                callback(posts)
-            }
-            override fun onFailure(call: Call<GetPostsResponse>, t: Throwable) {
-                Log.e("ProfileFragment", "${t.message}")
-            }
-
-        })
-    }
 
     private fun getFriends(callback: (MutableList<String>) -> Unit) {
         val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)

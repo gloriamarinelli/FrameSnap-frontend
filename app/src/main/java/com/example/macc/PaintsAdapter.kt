@@ -20,7 +20,6 @@ class PaintsAdapter(private val paintsList: List<Paint>, private val onItemClick
         val paint = paintsList[position]
         holder.paintImage.setImageBitmap(paint.paint)
         holder.paintName.text = paint.paint_name
-        holder.paintYear.text = paint.paint_year
 
         holder.itemView.setOnClickListener {
             onItemClickListener.onItemClick(paint)

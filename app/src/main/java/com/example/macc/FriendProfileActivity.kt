@@ -58,7 +58,6 @@ class FriendProfileActivity : AppCompatActivity() {
     private lateinit var usernameText: TextView
 
     private lateinit var postRecyclerView: RecyclerView
-    private lateinit var postAdapter: PostAdapter2
     private lateinit var noPostsMessage: TextView
 
     private lateinit var friendsButton: Button
@@ -102,19 +101,7 @@ class FriendProfileActivity : AppCompatActivity() {
                         noPostsMessage.visibility = View.VISIBLE
                         noPostsMessage.text = "Waiting for the user to accept the request..."
                     }
-                    else {
-                        postRecyclerView = findViewById(R.id.postRecyclerView)
-                        getUserPosts(friendName) { postList ->
-                            postAdapter = PostAdapter2(this, postList)
-                            postRecyclerView.adapter = postAdapter
 
-                            // Imposta il layout manager per la RecyclerView (ad esempio, LinearLayoutManager)
-                            postRecyclerView.layoutManager = LinearLayoutManager(this)
-
-                            // Aggiorna la visibilità del messaggio in base all'elenco dei post
-                            updatePostList(postList)
-                        }
-                    }
                 }
             }
 
@@ -206,53 +193,7 @@ class FriendProfileActivity : AppCompatActivity() {
         })
     }
 
-    private fun getUserPosts(username: String?, callback: (MutableList<Post>) -> Unit) {
-        var posts: MutableList<Post> = mutableListOf()
-        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val loggedUser = sharedPreferences.getString("username", "")
-
-        getPostsByUsernameApiService.getPostsByUsername(username, loggedUser).enqueue(object : Callback<GetPostsResponse> {
-            override fun onResponse(
-                call: Call<GetPostsResponse>,
-                response: Response<GetPostsResponse>
-            ) {
-                val result: GetPostsResponse? = response.body()
-
-                // Check if the result is not null before accessing properties
-                result?.let { it ->
-                    val status = it.status
-                    if (status == 200) {
-                        for (post in it.posts) {
-                            val id = post.id
-                            val username = post.username
-                            val encodedImage = post.imageData
-                            val likes = post.likes
-                            val likedByLoggedUser = post.likedByLoggedUser
-
-                            val originalBytes = Base64.decode(encodedImage, Base64.DEFAULT)
-                            val bitmap = BitmapFactory.decodeByteArray(
-                                originalBytes,
-                                0,
-                                originalBytes!!.size
-                            )
-
-                            val newPost = Post(id, username, bitmap, likes, likedByLoggedUser)
-                            posts.add(newPost)
-                        }
-                    } else {
-                        Log.e("FriendProfileActivity", "No posts")
-                    }
-                }
-                callback(posts)
-            }
-
-            override fun onFailure(call: Call<GetPostsResponse>, t: Throwable) {
-                Log.e("FriendProfileActivity", "${t.message}")
-            }
-        })
-    }
-
-    private fun areFriends(user1: String?, user2:String, callback: (Any) -> Unit) {
+       private fun areFriends(user1: String?, user2:String, callback: (Any) -> Unit) {
         val request = AreFriendsRequest(user1, user2)
 
         val areFriendsApiService = retrofit.create(AreFriendsAPI::class.java)
@@ -296,16 +237,7 @@ class FriendProfileActivity : AppCompatActivity() {
         })
     }
 
-    private fun updatePostList(samplePosts: List<Post>) {
-        // Controlla se l'elenco dei post è vuoto e imposta la visibilità di conseguenza
-        if (samplePosts.isEmpty()) {
-            noPostsMessage.visibility = View.VISIBLE
-        } else {
-            noPostsMessage.visibility = View.GONE
-        }
-    }
-
-    private fun drawableToBitmap(drawable: Drawable?): Bitmap {
+       private fun drawableToBitmap(drawable: Drawable?): Bitmap {
         if (drawable is BitmapDrawable) {
             return drawable.bitmap
         }
