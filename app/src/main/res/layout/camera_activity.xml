@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".CameraActivity"
 >
-
     <ImageView
         android:id="@+id/imageFromData"
         android:layout_width="match_parent"
@@ -25,7 +24,8 @@
         <RelativeLayout
             android:layout_height="match_parent"
             android:layout_width="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            tools:ignore="NestedWeights">
             <ImageView
                 android:id="@+id/inputImage"
                 android:layout_height="match_parent"
@@ -130,7 +130,8 @@
                 android:layout_height="wrap_content"
                 android:text="Output Image"/>
 
-        </RelativeLayout>    </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>
