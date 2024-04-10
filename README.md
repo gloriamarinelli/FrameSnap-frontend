@@ -48,7 +48,7 @@ The **Paint** feature is the most important feature of our application. It is ba
 
 The **Social Interaction** is when the user visits the profile of another user, (s)he could decide to send to the other user a friendship request; the other user can decide either to accept or refuse such a friendship request. 
 
-### Maps Location
+### Maps
 
 The **Map** feature allows the user to see its current location and the location of the shops, based on a [Google Map API](https://developers.google.com/maps/documentation/android-sdk). The user can also see the distance between his/her current location and the shop.
 
