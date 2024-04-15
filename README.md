@@ -34,7 +34,7 @@ The first icon of this navigation bar is the default one (**homepage**); i.e., s
 
 The second icon of the navigation bar is the **friends** icon, and upon the click of such an icon, the user will be redirected to a screen showing all the users that are currently signed up to the system. The user will be able also to search for a specific user, given its username. By clicking on one username among all those shown, the user will be able to visit the profile of the selected user.
 
-The thirt icon allows the user to visit his/her own **profile****. Moreover, by selecting the settings icon in this screen, the user will be able to logout, to modify his/her own account and/or to delete his/her own account.
+The thirt icon allows the user to visit his/her own **profile**. Moreover, by selecting the settings icon in this screen, the user will be able to logout, to modify his/her own account and/or to delete his/her own account.
 
 The fourth icon allows the user to see its current **location** and the location of the shops, based on a Google Maps API.
 
