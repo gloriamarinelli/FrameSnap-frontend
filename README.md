@@ -1,4 +1,4 @@
-# FrameSnap
+# FrameSnap - Mobile Applications and Cloud Computing Project
 
 **Presented by:**
 
